@@ -1,0 +1,28 @@
+# Unreal Engine
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Build/IDE
+.vs/
+.vscode/
+*.VC.db
+*.VC.opendb
+*.sln
+*.xcodeproj
+*.xcworkspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs/Temporary
+*.log
+
+# Local config
+*.user
+*.suo
+
+# Optional: keep marketplace content tracked (leave Content/ tracked)
+
