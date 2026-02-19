@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "FactionInterface.h"
+#include "BuildingData.h"
 #include "TopDownPlayerController.generated.h"
 
 /**
@@ -19,6 +20,7 @@ class ACLMBasePawn;
 class ATopDownHUD;
 class ACLMBaseBuilding;
 class URTSResourceComponent;
+class UDataTable;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorsSelectedDelegate, const TArray<AActor*>&, SelectedActors);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuildingPlaced, ACLMBaseBuilding*, Building);
@@ -50,6 +52,27 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Building")
 	bool IsPlacingBuilding() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	TArray<FBuildingData> GetAvailableBuildingsForFaction() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	bool StartPlacingBuildingById(FName BuildingId);
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	bool StartPlacingBuildingBySlot(int32 SlotIndex);
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	void ToggleBuildingMenu();
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	bool IsBuildingMenuVisible() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	FName GetPendingBuildingId() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Resources")
+	int32 GetCurrentMana() const;
 
 	UPROPERTY(BlueprintAssignable, Category = "Delegates")
 	FOnBuildingPlaced OnBuildingPlaced;
@@ -88,14 +111,21 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Building", meta = (AllowPrivateAccess = "true"))
 	TEnumAsByte<ECollisionChannel> BuildTraceChannel = ECollisionChannel::ECC_Visibility;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Building", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UDataTable> BuildingDataTable;
+
 	UPROPERTY()
 	TObjectPtr<ACLMBaseBuilding> PreviewBuilding;
 
 	UPROPERTY()
 	TSubclassOf<ACLMBaseBuilding> PendingBuildingClass;
 
+	UPROPERTY()
+	FName PendingBuildingId;
+
 	bool bIsPlacingBuilding = false;
 	bool bLastPlacementValid = false;
+	bool bShowBuildingMenu = true;
 
 	//box select
 
@@ -120,6 +150,17 @@ protected:
 
 	bool UpdateBuildingPreview();
 	bool IsPlacementValid(const FHitResult& HitResult) const;
+	void TrySelectBuildingSlot(int32 SlotIndex);
+	void SelectBuildingSlot1();
+	void SelectBuildingSlot2();
+	void SelectBuildingSlot3();
+	void SelectBuildingSlot4();
+	void SelectBuildingSlot5();
+	void SelectBuildingSlot6();
+	void SelectBuildingSlot7();
+	void SelectBuildingSlot8();
+	void SelectBuildingSlot9();
+	void CancelBuildingPlacementInput();
 
 	//box select
 	void SelectStart(const FInputActionValue& Value);
