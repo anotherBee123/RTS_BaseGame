@@ -13,7 +13,7 @@ void ACLMGeneratorBuilding::BeginPlay()
 
 	if (ManaTickInterval > 0.0f)
 	{
-		printf(TEXT("Starting mana generation with interval: %f seconds"), ManaTickInterval);
+		UE_LOG(LogTemp, Display, TEXT("Starting mana generation with interval: %f seconds"), ManaTickInterval);
 		GetWorld()->GetTimerManager().SetTimer(TimerHandleGenerateMana, this, &ACLMGeneratorBuilding::GenerateMana, ManaTickInterval, true);
 	}
 }

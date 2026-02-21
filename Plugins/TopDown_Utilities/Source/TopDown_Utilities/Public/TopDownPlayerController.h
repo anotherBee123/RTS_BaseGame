@@ -77,18 +77,30 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Delegates")
 	FOnBuildingPlaced OnBuildingPlaced;
 
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
+	FOnActorsSelectedDelegate OnActorsSelected;
+
+	UFUNCTION(BlueprintCallable, Category = "Selection")
+	TArray<AActor*> GetSelectedActorsForUI() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Selection")
+	AActor* GetPrimarySelectedActor() const;
+
 private:
 
 	//select action input
 	UPROPERTY(EditDefaultsOnly, Category = "Input", meta = (AllowPrivateAccess="true"))
 	TObjectPtr<UInputAction> SelectAction;
 
-	UPROPERTY(BlueprintAssignable, Category = "Delegates")
-	FOnActorsSelectedDelegate OnActorsSelected;
-
 	//command action
 	UPROPERTY(EditDefaultsOnly, Category = "Input", meta = (AllowPrivateAccess="true"))
 	TObjectPtr<UInputAction> CommandAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Command", meta = (AllowPrivateAccess="true", ClampMin="0.0"))
+	float FormationDragMinLength = 150.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Command", meta = (AllowPrivateAccess="true"))
+	FColor FormationDebugLineColor = FColor::Cyan;
 
 	UPROPERTY()
 	TObjectPtr<AActor> SelectedActor;
@@ -131,7 +143,16 @@ private:
 
 	FVector2D SelectionStartPosition;
 	FVector2D SelectionSize;
+	bool bIsSelectionDragActive = false;
+	float SelectionDragThreshold = 8.0f;
 	TArray<AActor*> SelectedActors;
+
+	bool bIsCommandDragActive = false;
+	bool bHasCommandDragHit = false;
+	FVector CommandDragStartLocation = FVector::ZeroVector;
+	FVector CommandDragCurrentLocation = FVector::ZeroVector;
+	TArray<TWeakObjectPtr<AActor>> CommandDragActors;
+	TArray<FVector> CommandDragDestinations;
 
 	//end
 
@@ -147,6 +168,17 @@ protected:
 	void Select(const FInputActionValue& Value);
 
 	void CommandSelectedActors(const FInputActionValue& Value);
+	void StartCommandDrag(const FInputActionValue& Value);
+	void UpdateCommandDrag(const FInputActionValue& Value);
+	void CancelCommandDrag(const FInputActionValue& Value);
+	void ClearCommandDrag();
+	bool TryGetCommandHit(FHitResult& OutHitResult);
+	void GatherCommandableSelectedActors(TArray<AActor*>& OutActors) const;
+	void BuildLineFormationDestinations(const FVector& StartLocation, const FVector& EndLocation, int32 Count, TArray<FVector>& OutDestinations) const;
+	void BuildFormationAssignmentByProximity(TArray<int32>& OutDestinationIndexPerActor) const;
+	void DrawFormationPreviewLines() const;
+	void IssueFormationMoveCommand();
+	void IssueLegacyMoveCommand(const FVector& Destination);
 
 	bool UpdateBuildingPreview();
 	bool IsPlacementValid(const FHitResult& HitResult) const;

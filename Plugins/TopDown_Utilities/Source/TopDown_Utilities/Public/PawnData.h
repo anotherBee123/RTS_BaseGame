@@ -26,10 +26,13 @@ struct FPawnData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 	int32 BaseHealth;
 
-	FPawnData() : PawnType(EPawnType::Krag), DisplayName(TEXT("")), Texture(nullptr), BaseHealth(100) {}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
+	int32 DPS;
 
-	FPawnData(EPawnType Type, FString Name, UTexture2D* Tex, int32 Default)
-		: PawnType(Type), DisplayName(Name), Texture(Tex), BaseHealth(Default){
+	FPawnData() : PawnType(EPawnType::Krag), DisplayName(TEXT("")), Texture(nullptr), BaseHealth(100), DPS(10) {}
+
+	FPawnData(EPawnType Type, FString Name, UTexture2D* Tex, int32 Default, int32 InDPS)
+		: PawnType(Type), DisplayName(Name), Texture(Tex), BaseHealth(Default), DPS(InDPS){
 		
 		}
 
