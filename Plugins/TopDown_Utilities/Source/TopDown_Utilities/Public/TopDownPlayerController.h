@@ -139,7 +139,7 @@ private:
 	bool bLastPlacementValid = false;
 	bool bShowBuildingMenu = true;
 
-	//box select
+	// box select state
 
 	FVector2D SelectionStartPosition;
 	FVector2D SelectionSize;
@@ -154,24 +154,29 @@ private:
 	TArray<TWeakObjectPtr<AActor>> CommandDragActors;
 	TArray<FVector> CommandDragDestinations;
 
-	//end
+	// end box select state
 
 
 protected: 
 
+	// Engine lifecycle
 	virtual void BeginPlay() override;
-
 	virtual void SetupInputComponent() override;
-
 	virtual void Tick(float DeltaSeconds) override;
 
+	// Selection input
 	void Select(const FInputActionValue& Value);
 
+	// Command input (right-click / movement)
 	void CommandSelectedActors(const FInputActionValue& Value);
+
+	// Formation drag command flow
 	void StartCommandDrag(const FInputActionValue& Value);
 	void UpdateCommandDrag(const FInputActionValue& Value);
 	void CancelCommandDrag(const FInputActionValue& Value);
 	void ClearCommandDrag();
+
+	// Formation drag helpers
 	bool TryGetCommandHit(FHitResult& OutHitResult);
 	void GatherCommandableSelectedActors(TArray<AActor*>& OutActors) const;
 	void BuildLineFormationDestinations(const FVector& StartLocation, const FVector& EndLocation, int32 Count, TArray<FVector>& OutDestinations) const;
@@ -180,6 +185,7 @@ protected:
 	void IssueFormationMoveCommand();
 	void IssueLegacyMoveCommand(const FVector& Destination);
 
+	// Building placement + menu helpers
 	bool UpdateBuildingPreview();
 	bool IsPlacementValid(const FHitResult& HitResult) const;
 	void TrySelectBuildingSlot(int32 SlotIndex);
@@ -194,15 +200,15 @@ protected:
 	void SelectBuildingSlot9();
 	void CancelBuildingPlacementInput();
 
-	//box select
+	// box select functions
 	void SelectStart(const FInputActionValue& Value);
 	void SelectOnGoing(const FInputActionValue& Value);
 	void SelectEnd(const FInputActionValue& Value);
 	void SelectMultipleActors();
-	//end
+	// end box select functions
 
+	// Faction interface implementation
 	void SetFaction_Implementation(int32 NewFaction) override;
-
 	int32 GetFaction_Implementation() override;
 
 };

@@ -12,6 +12,8 @@
 #include "Engine/DataTable.h"
 #include "DrawDebugHelpers.h"
 
+// Lifecycle / setup
+
 
 ATopDownPlayerController::ATopDownPlayerController()
 {
@@ -40,6 +42,7 @@ AActor* ATopDownPlayerController::GetPrimarySelectedActor() const
     return SelectedActor;
 }
 
+// Engine lifecycle
 void ATopDownPlayerController::BeginPlay()
 {
     Super::BeginPlay();
@@ -98,6 +101,7 @@ void ATopDownPlayerController::SetupInputComponent()
 
 }
 
+// Selection input
 void ATopDownPlayerController::Select(const FInputActionValue& Value)
 {
     if (bIsPlacingBuilding)
